@@ -123,7 +123,6 @@ void chloride::BaseMeshHandler::execute(const mat4& perspective, const mat4& cam
 void chloride::BaseMeshHandler::initialize()
 {
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
 	glDepthFunc(GL_LESS);
 
 	glGenBuffers(1, &VBO);

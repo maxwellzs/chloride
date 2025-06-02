@@ -26,10 +26,10 @@ void main()
     * actorRotation[gl_InstanceID] 
     * vec4(normal, 1.0);
 
-    fragNormal = originalNormal.xyz;
-    fragPos = original.xyz;
+    fragNormal = vec3(originalNormal.xz, -originalNormal.y);
+    fragPos = vec3(original.xz, -original.y);
 
-    vec4 homo = perspective * vec4(original.yz, -original.x, 1.0);
+    vec4 homo = perspective * vec4(original.xz, -original.y, 1.0);
 
     gl_Position = vec4(homo.xy/homo.w, -homo.z/homo.w, 1.0);
     texCoord = uv;

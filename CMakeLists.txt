@@ -14,10 +14,11 @@ project ("chloride")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-set(ng-log_DIR "C:\\Users\\Alessia\\source\\repos\\ng-log\\out\\install\\x64-Clang-Release\\lib\\cmake\\ng-log")
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
 set(BUILD_SHARED_LIBS true)
+
+
+set(ng-log_DIR "C:\\Users\\Alessia\\source\\repos\\ng-log\\out\\install\\x64-Clang-Release\\lib\\cmake\\ng-log")
 set(glfw3_DIR "C:\\Users\\Alessia\\source\\repos\\glfw\\out\\install\\x64-Clang-Release\\lib\\cmake\\glfw3")
 set(assimp_DIR "C:\\Users\\Alessia\\source\\repos\\assimp\\out\\install\\x64-Clang-Release\\lib\\cmake\\assimp-5.4")
 set(PNG_DIR "C:\\Users\\Alessia\\source\\repos\\libpng\\out\\install\\x64-Clang-Release\\lib\\cmake\\PNG")
