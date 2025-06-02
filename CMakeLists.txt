@@ -60,7 +60,15 @@ add_library (chlorideEngine SHARED
 	"graphic/RenderManager.h" 
 	"graphic/RenderManager.cpp" 
 	"utils/MeshFactory.h" 
-	"utils/MeshFactory.cpp" "graphic/handler/BaseMeshHandler.h" "graphic/handler/BaseMeshHandler.cpp" "utils/Spinlock.h" "engine/Object.h" "graphic/ShaderFactory.h" "graphic/ShaderFactory.cpp" "engine/Camera.h" "engine/Camera.cpp")
+	"utils/MeshFactory.cpp" 
+	"graphic/handler/BaseMeshHandler.h" 
+	"graphic/handler/BaseMeshHandler.cpp" 
+	"utils/Spinlock.h" 
+	"engine/Object.h" 
+	"graphic/ShaderFactory.h" 
+	"graphic/ShaderFactory.cpp" 
+	"engine/Camera.h" 
+	"engine/Camera.cpp")
 target_link_libraries (chlorideEngine
 	glfw
 	OpenGL::GL

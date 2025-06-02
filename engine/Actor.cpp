@@ -14,7 +14,7 @@ void chloride::Actor::update(Engine& ctx, clock_t delta)
 	static double theta = 0;
 	theta += delta * 1.0 / 1000;
 	rotation.z = theta;
-	location.x = 2.2 + sin(theta);
+	location.x = 3.0 + sin(theta);
 	updateGeometry();
 }
 

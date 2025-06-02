@@ -155,8 +155,8 @@ namespace algebra {
 			float l = ratio * u;
 			float r = ratio * d;
 			return mat4(
-				vec4((2*near)/(r-l),0,-(l+r)/(r-l),0),
-				vec4(0,(2* near)/(u-d),-(u+d)/(u-d),0),
+				vec4((2*near)/(r-l),0,(l+r)/(r-l),0),
+				vec4(0,(2* near)/(u-d),(u+d)/(u-d),0),
 				vec4(0,0,-(near+far)/(near-far), -(2*near*far)/(near-far)),
 				vec4(0,0,-1,0)
 			);

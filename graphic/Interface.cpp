@@ -48,14 +48,14 @@ chloride::Interface::Interface(size_t width, size_t height, const std::string& t
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) throw std::runtime_error("cannot load glad");
 
 	glViewport(0, 0, width, height);
-	mat4 currentPerspective = mat4::perspective(0.1f, 100.0f, 80, static_cast<float>(width) / height);
+	mat4 currentPerspective = mat4::perspective(0.1f, 100.0f, 45, static_cast<float>(width) / height);
 	LOG(INFO) << "current perspective : \r\n" << currentPerspective;
 	RenderManager::get().setPerspective(currentPerspective);
 
 	glfwSetWindowUserPointer(window, this);
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int w, int h) {
 		glViewport(0, 0, w, h);
-		RenderManager::get().setPerspective(mat4::perspective(0.1f, 100.0f, 80, static_cast<float>(w) / h));
+		RenderManager::get().setPerspective(mat4::perspective(0.1f, 100.0f, 45, static_cast<float>(w) / h));
 		});
 	previousFrame = clock();
 
@@ -75,7 +75,7 @@ bool chloride::Interface::loopOnce()
 
 	if (shouldRender(now)) {
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// draw calls
 		RenderManager::get().executeAll();
 		displayFPS(now - previousFrame);
