@@ -39,16 +39,19 @@ namespace chloride {
 		static std::atomic_int ref;
 		static void initialize();
 		static void shutdown();
+		std::string title;
 
 		bool stopped = false;
 
-		size_t renderInterval = CLOCKS_PER_SEC/60;
-		clock_t previousFrame;
+		size_t fpsLimit = 60;
+		double previousFrame = glfwGetTime();
 
-		inline bool shouldRender(clock_t now) const {
-			clock_t delta = now - previousFrame;
-			return renderInterval <= delta;
+		inline bool shouldRender(double now) const {
+			size_t currentRate = 1 / (now - previousFrame);
+			return fpsLimit >= currentRate;
 		}
+
+		void displayFPS(double delta);
 
 	public:
 		~Interface();

@@ -17,6 +17,8 @@
       "configurationType": "Debug",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
+      "enableClangTidyCodeAnalysis": true,
+      "enableMicrosoftCodeAnalysis": false,
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",

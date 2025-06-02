@@ -1,10 +1,10 @@
 #ifndef Engine_h
 #define Engine_h
 
-#include "utils/Singleton.h"
 #include "graphic/Interface.h"
 #include "Stage.h"
 #include "Object.h"
+#include "Camera.h"
 
 #include <ng-log/logging.h>
 #include <memory>
@@ -20,7 +20,7 @@ namespace chloride {
 	 * handles the translation of objects, user input, scripts
 	 */
 	class Engine {
-		friend class Singleton<Engine>;
+
 	private:
 		clock_t tickInterval;
 		clock_t previousTick = clock();
@@ -36,10 +36,12 @@ namespace chloride {
 		
 		std::unique_ptr<Stage> currentStage;
 
+		std::unique_ptr<Camera> defaultCamera;
+
 		void updateActors(clock_t delta);
 
 	public:
-		
+		static Engine& get();
 		/**
 		 * @brief set logical frame time
 		 * @param tps tick per second

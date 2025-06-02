@@ -14,6 +14,13 @@ void chloride::Engine::updateActors(clock_t delta)
 	}
 }
 
+chloride::Engine& chloride::Engine::get()
+{
+	// TODO: insert return statement here
+	static Engine instance;
+	return instance;
+}
+
 chloride::Engine& chloride::Engine::setTickInterval(size_t tps)
 {
 	// TODO: insert return statement here
@@ -61,6 +68,7 @@ void chloride::Engine::run()
 		{
 			// windows closed 
 			LOG(INFO) << "engine received quit signal, stopping...";
+			stop();
 			break;
 		}
 		catch (const std::exception& e) 
@@ -75,4 +83,6 @@ void chloride::Engine::run()
 void chloride::Engine::stop()
 {
 	stopped = true;
+	// release resource
+	currentStage = nullptr;
 }

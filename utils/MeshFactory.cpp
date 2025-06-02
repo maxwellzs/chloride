@@ -148,14 +148,21 @@ void chloride::MeshFactory::decodeImage(const std::unique_ptr<MeshData>& data, c
     LOG(INFO) << "size after decode : "
         << imageWidth << " x " << imageHeight << " totle " << imageSize << " bytes, depth=" << imageDepth;
 
-    Texture t(imageSize, imageWidth, imageHeight, imageDepth);
+    auto t = std::make_unique<Texture>(imageSize, imageWidth, imageHeight, imageDepth);
 
     for (size_t i = 0; i < imageHeight; i++)
     {
-        png_read_row(png_ctx, t.data + rowSize * i, nullptr);
+        png_read_row(png_ctx, t->data + rowSize * i, nullptr);
     }
     data->addTexture(key, std::move(t));
 
     png_destroy_read_struct(&png_ctx, &info, NULL);
+}
+
+chloride::MeshFactory& chloride::MeshFactory::get()
+{
+    // TODO: insert return statement here
+    static MeshFactory instance;
+    return instance;
 }
 

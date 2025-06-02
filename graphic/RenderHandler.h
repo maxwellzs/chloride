@@ -5,10 +5,10 @@
 #include <variant>
 #include <map>
 #include <queue>
+#include <functional>
 
 #include "utils/Spinlock.h"
 #include "Algebra.h"
-#include <variant>
 using namespace algebra;
 
 namespace chloride {
@@ -32,13 +32,7 @@ namespace chloride {
 			delete[]data;
 		}
 
-		Texture(const Texture&) = delete;
-		void operator=(const Texture&) = delete;
-		Texture(Texture&& t) {
-			delete[]data;
-			data = t.data;
-			t.data = nullptr;
-		}
+		unsigned char* getData() const { return data; }
 	};
 
 	struct Vertex {
@@ -56,8 +50,8 @@ namespace chloride {
 
 	struct Face {
 		// index of vertex in this face
-		size_t p1, p2, p3;
-		Face(size_t p1, size_t p2, size_t p3) : p1(p1), p2(p2), p3(p3) {};
+		uint32_t p1, p2, p3;
+		Face(uint32_t p1, uint32_t p2, uint32_t p3) : p1(p1), p2(p2), p3(p3) {};
 		Face(const Face& f) : p1(f.p1), p2(f.p2), p3(f.p3) {}
 		void operator=(const Face& f) {
 			p1 = f.p1; p2 = f.p2; p3 = f.p3;
@@ -68,7 +62,7 @@ namespace chloride {
 	class RenderInstance;
 	class RenderIntanceRef;
 
-	using uniform = std::variant < uint32_t, float , vec2, vec3, vec4, mat4 > ;
+	using uniform = std::variant< uint32_t, float , vec2, vec3, vec4, mat4 > ;
 
 	/**
 	 * @brief a render instance is an object referencing to a handler, requiring a
@@ -106,6 +100,12 @@ namespace chloride {
 		 * @return this reference
 		 */
 		RenderInstance& setUniform(const std::string& name, std::unique_ptr<uniform> var);
+
+		/**
+		 * @brief iterate throw this instance to retrieve all uniforms
+		 * @param foreach callback
+		 */
+		void forEach(std::function<void (const std::string& key, const std::unique_ptr<uniform>& uniform)> callback);
 	};
 
 	/**
@@ -144,13 +144,18 @@ namespace chloride {
 
 		/**
 		 * @brief actual function to draw every instance
+		 * @param perspective the perspective matrix
+		 * @param camera the camera transformation matrix
 		 */
-		virtual void execute() = 0;
+		virtual void execute(const mat4& perspective, const mat4& cameraPos, const mat4& cameraRotation) = 0;
+
 		/**
 		 * @brief call once when added to RenderManager
 		 */
 		virtual void initialize() {};
 	};
+
+
 
 };
 

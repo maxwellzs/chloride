@@ -9,7 +9,6 @@
 #include <ng-log/logging.h>
 #include <png.h>
 
-#include "Singleton.h"
 #include "graphic/RenderManager.h"
 #include "graphic/handler/BaseMeshHandler.h"
 #include "engine/components/Mesh.h"
@@ -17,7 +16,6 @@
 namespace chloride {
 
 	class MeshFactory {
-		friend class Singleton<MeshFactory>;
 
 	private:
 		MeshFactory() = default;
@@ -27,6 +25,7 @@ namespace chloride {
 		void decodeImage(const std::unique_ptr<MeshData>& data, const std::string& key, const char* pngData, size_t dataSize);
 
 	public:
+		static MeshFactory& get();
 		/**
 		 * @brief create a mesh object from source
 		 * when a mesh is loaded the first time, a handler with the id path will be created
@@ -39,10 +38,9 @@ namespace chloride {
 		std::unique_ptr<Mesh> loadMesh(const std::string& path, Args ... args) {
 			static_assert(std::is_base_of<BaseMeshHandler, HandlerType>::value, "Derived must inherit from Base");
 
-
 			// check if the handler exist
-			if (Singleton<RenderManager>::get().handlerExist(path)) {
-				const auto& handler = Singleton<RenderManager>::get().getHandlerById(path);
+			if (RenderManager::get().handlerExist(path)) {
+				const auto& handler = RenderManager::get().getHandlerById(path);
 				return std::make_unique<Mesh>(handler->allocateInstance());
 			} 
 
@@ -51,8 +49,8 @@ namespace chloride {
 			// parse data
 			readFromFile(path, handler->getMeshData());
 
-			Singleton<RenderManager>::get().addHandler(path, std::move(handler));
-			const auto& h = Singleton<RenderManager>::get().getHandlerById(path);
+			RenderManager::get().addHandler(path, std::move(handler));
+			const auto& h = RenderManager::get().getHandlerById(path);
 
 			return std::make_unique<Mesh>(h->allocateInstance());
 

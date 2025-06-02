@@ -36,6 +36,13 @@ chloride::RenderInstance& chloride::RenderInstance::setUniform(const std::string
 	return *this;
 }
 
+void chloride::RenderInstance::forEach(std::function<void(const std::string& key, const std::unique_ptr<uniform>& uniform)> callback)
+{
+	for (auto& i : uniformMap) {
+		callback(i.first, i.second);
+	}
+}
+
 const std::unique_ptr<chloride::RenderInstance>& chloride::RenderHandler::getInstanceBySlot(size_t slot)
 {
 	// TODO: insert return statement here

@@ -24,6 +24,14 @@ void chloride::Interface::shutdown()
 	}
 }
 
+
+void chloride::Interface::displayFPS(double delta)
+{
+	size_t fps = 1 / delta;
+	std::string newTitle = title + " fps=" + std::to_string(fps);
+	glfwSetWindowTitle(window, newTitle.c_str());
+}
+
 chloride::Interface::~Interface()
 {
 	glfwDestroyWindow(window);
@@ -31,6 +39,7 @@ chloride::Interface::~Interface()
 }
 
 chloride::Interface::Interface(size_t width, size_t height, const std::string& title)
+	: title(title)
 {
 	initialize();
 	window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -39,10 +48,14 @@ chloride::Interface::Interface(size_t width, size_t height, const std::string& t
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) throw std::runtime_error("cannot load glad");
 
 	glViewport(0, 0, width, height);
+	mat4 currentPerspective = mat4::perspective(0.1f, 100.0f, 80, static_cast<float>(width) / height);
+	LOG(INFO) << "current perspective : \r\n" << currentPerspective;
+	RenderManager::get().setPerspective(currentPerspective);
 
 	glfwSetWindowUserPointer(window, this);
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int w, int h) {
 		glViewport(0, 0, w, h);
+		RenderManager::get().setPerspective(mat4::perspective(0.1f, 100.0f, 80, static_cast<float>(w) / h));
 		});
 	previousFrame = clock();
 
@@ -50,25 +63,29 @@ chloride::Interface::Interface(size_t width, size_t height, const std::string& t
 
 void chloride::Interface::limitFramerate(size_t rate)
 {
-	renderInterval = CLOCKS_PER_SEC / rate;
+	fpsLimit = rate;
 }
 
 bool chloride::Interface::loopOnce()
 {
-	if (glfwWindowShouldClose(window)) throw std::exception();
+	if (glfwWindowShouldClose(window)) throw InterfaceClosedException();
 
-	clock_t now = clock();
+	double now = glfwGetTime();
 	bool rendered = false;
 
-	if (shouldRender(now - previousFrame)) {
+	if (shouldRender(now)) {
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		// draw calls
-		Singleton<RenderManager>::get().executeAll();
+		RenderManager::get().executeAll();
+		displayFPS(now - previousFrame);
 
 		previousFrame = now;
 		rendered = true;
+
+		glfwSwapBuffers(window);
 	}
 
 	glfwPollEvents();
-	glfwSwapBuffers(window);
 	return rendered;
 }

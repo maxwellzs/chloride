@@ -2,7 +2,6 @@
 //
 
 #include "chloride.h"
-#include "utils/Singleton.h"
 
 using namespace std;
 

@@ -11,6 +11,10 @@ endif()
 
 project ("chloride")
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(ng-log_DIR "C:\\Users\\Alessia\\source\\repos\\ng-log\\out\\install\\x64-Clang-Release\\lib\\cmake\\ng-log")
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
 set(BUILD_SHARED_LIBS true)
@@ -26,6 +30,7 @@ link_directories("C:\\Users\\Alessia\\source\\repos\\zlib\\out\\install\\x64-Cla
 include_directories(${PNG_PNG_INCLUDE_DIR})
 include_directories(${ZLIB_INCLUDE_DIR})
 link_directories(${PNG_LIBRARY})
+link_directories(${ZLIB_LIBRARY})
 
 find_package(ng-log REQUIRED)
 find_package(assimp REQUIRED)
@@ -41,7 +46,7 @@ add_library (chlorideEngine SHARED
 	"graphic/Interface.h" 
 	"graphic/Interface.cpp"
 	"glad/glad.c"
-	"utils/Singleton.h" 
+	 
 	"engine/Engine.h" 
 	"engine/Engine.cpp" 
 	"engine/Stage.h" 
@@ -55,13 +60,14 @@ add_library (chlorideEngine SHARED
 	"graphic/RenderManager.h" 
 	"graphic/RenderManager.cpp" 
 	"utils/MeshFactory.h" 
-	"utils/MeshFactory.cpp" "graphic/handler/BaseMeshHandler.h" "graphic/handler/BaseMeshHandler.cpp" "utils/Spinlock.h" "engine/Object.h")
+	"utils/MeshFactory.cpp" "graphic/handler/BaseMeshHandler.h" "graphic/handler/BaseMeshHandler.cpp" "utils/Spinlock.h" "engine/Object.h" "graphic/ShaderFactory.h" "graphic/ShaderFactory.cpp" "engine/Camera.h" "engine/Camera.cpp")
 target_link_libraries (chlorideEngine
 	glfw
 	OpenGL::GL
 	ng-log::ng-log
 	assimp::assimp
-	libpng16.dll
+	libpng16
+	z
 )
 add_executable(staticMesh 
 	"examples/StaticMesh.cpp"
@@ -69,6 +75,15 @@ add_executable(staticMesh
 target_link_libraries(staticMesh
 	chlorideEngine
 )
+
+list(APPEND ShaderList 
+	"shader/generic.vert"
+	"shader/generic.frag"
+)
+
+foreach(Shader IN LISTS ShaderList) 
+	file(COPY ${Shader} DESTINATION ${CMAKE_BINARY_DIR}/shader/)
+endforeach()
 
 set_property(TARGET chloride PROPERTY CXX_STANDARD 17)
 set_property(TARGET chlorideEngine PROPERTY CXX_STANDARD 17)

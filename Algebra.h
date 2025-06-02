@@ -38,6 +38,7 @@ namespace algebra {
 		void operator=(const vec3& v) { x = v.x; y = v.y; z = v.z; }
 		vec3 operator-(const vec3& v) const { return  { x - v.x, y - v.y, z - v.z }; }
 		vec3 operator+(const vec3& v) const { return  { x + v.x, y + v.y, z + v.z }; }
+		void operator+=(const vec3& v) { *this = *this + v; }
 		vec3 cross(const vec3& v) const {
 			return vec3(
 				y * v.z - z * v.y,
@@ -148,9 +149,18 @@ namespace algebra {
 			);
 		}
 
-	/*	static mat4 perspective(float near, float far, float fov, float ratio) {
-			
-		}*/
+		static mat4 perspective(float near, float far, float fov, float ratio) {
+			float u = near * tan(3.14159268979f * (fov / 180));
+			float d = -u;
+			float l = ratio * u;
+			float r = ratio * d;
+			return mat4(
+				vec4((2*near)/(r-l),0,-(l+r)/(r-l),0),
+				vec4(0,(2* near)/(u-d),-(u+d)/(u-d),0),
+				vec4(0,0,-(near+far)/(near-far), -(2*near*far)/(near-far)),
+				vec4(0,0,-1,0)
+			);
+		}
 
 
 		friend std::ostream& operator<<(std::ostream& out, const mat4& v) {
